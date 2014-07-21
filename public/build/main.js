@@ -28352,11 +28352,11 @@ module.exports = React.createClass({displayName: 'exports',
   render: function() {
     return (
       React.DOM.div({className: "comp-quantity-picker clearfix"}, 
-        React.DOM.button({className: "modifier decrease pull-left", onClick: this._updateValue.bind(this, -1)}, "–"), 
+        React.DOM.a({className: "modifier decrease pull-left", onClick: this._updateValue.bind(this, -1)}, "–"), 
         React.DOM.div({className: "quantity"}, 
           React.DOM.span(null, this.props.value)
         ), 
-        React.DOM.button({className: "modifier increase pull-right", onClick: this._updateValue.bind(this, 1)}, "+")
+        React.DOM.a({className: "modifier increase pull-right", onClick: this._updateValue.bind(this, 1)}, "+")
       )
     );
   }
@@ -28590,7 +28590,7 @@ module.exports = React.createClass({displayName: 'exports',
   },
   _updateFilter: function(e) {
     this.setState({
-      filter: e.target.value
+      filter: e.target.value.toLowerCase()
     });
   },
   _toggleItem: function(item) {

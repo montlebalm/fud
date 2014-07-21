@@ -15,11 +15,11 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className='comp-quantity-picker clearfix'>
-        <button className='modifier decrease pull-left' onClick={this._updateValue.bind(this, -1)}>–</button>
+        <a className='modifier decrease pull-left' onClick={this._updateValue.bind(this, -1)}>–</a>
         <div className='quantity'>
           <span>{this.props.value}</span>
         </div>
-        <button className='modifier increase pull-right' onClick={this._updateValue.bind(this, 1)}>+</button>
+        <a className='modifier increase pull-right' onClick={this._updateValue.bind(this, 1)}>+</a>
       </div>
     );
   }

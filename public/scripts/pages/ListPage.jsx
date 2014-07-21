@@ -30,7 +30,7 @@ module.exports = React.createClass({
   },
   _updateFilter: function(e) {
     this.setState({
-      filter: e.target.value
+      filter: e.target.value.toLowerCase()
     });
   },
   _toggleItem: function(item) {

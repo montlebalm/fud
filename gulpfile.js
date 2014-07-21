@@ -113,11 +113,15 @@ gulp.task('watch', function() {
 gulp.task('develop', function() {
   nodemon({
     script: './server.js',
-    ignore: ['./public/**/*.*'],
+    ignore: [
+      './node_modules/**/*.*',
+      './bower_components/**/*.*',
+      './public/**/*.*'
+    ],
     env: {
       'NODE_ENV': 'development'
     }
-  }).on('start', ['deploy', 'watch']);
+  }).on('start', ['watch']);
 });
 
 gulp.task('deploy', [

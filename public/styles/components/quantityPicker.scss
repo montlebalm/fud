@@ -11,10 +11,9 @@ $buttonWidth: 50px;
     height: $height;
     width: $buttonWidth;
     text-align: center;
-    background: white;
-    border: 0;
     color: #007Aff;
     font-size: 1.5em;
+    line-height: $height;
 
     &.increase {
       border-left: 1px solid #ccc;
