@@ -9,7 +9,7 @@
     "underscore": "^1.6.0"
   },
   "scripts": {
-    "postinstall": "gulp deploy"
+    "postinstall": "bower install; gulp deploy"
   },
   "devDependencies": {
     "browserify": "^4.2.3",
