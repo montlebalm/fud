@@ -1,0 +1,39 @@
+a:hover {
+  text-decoration: none; }
+
+[data-section=list] .item-quantity {
+  color: #999; }
+[data-section=list] .completed {
+  color: #999;
+  text-decoration: line-through; }
+
+.bar .btn-nav.pull-left {
+  margin-left: 0; }
+
+.bar .btn-nav.pull-right {
+  margin-right: 0; }
+
+.comp-quantity-picker {
+  background: white;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc; }
+  .comp-quantity-picker .modifier {
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    background: white;
+    border: 0;
+    color: #007Aff;
+    font-size: 1.5em; }
+    .comp-quantity-picker .modifier.increase {
+      border-left: 1px solid #ccc; }
+    .comp-quantity-picker .modifier.decrease {
+      border-right: 1px solid #ccc; }
+  .comp-quantity-picker .quantity {
+    position: absolute;
+    height: 100%;
+    right: 50px;
+    left: 50px;
+    text-align: center;
+    line-height: 50px; }

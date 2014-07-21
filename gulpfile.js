@@ -75,45 +75,45 @@ gulp.task('browserify:app', function() {
 });
 
 gulp.task('fonts', function() {
-  return gulp.src('bower_components/ratchet/dist/fonts/*.*')
-    .pipe(gulp.dest('public/fonts'));
+  return gulp.src('./bower_components/ratchet/dist/fonts/*.*')
+    .pipe(gulp.dest('./public/fonts'));
 });
 
 gulp.task('sass:vendor', function() {
   var sources = [
-    'bower_components/ratchet/dist/css/ratchet.css',
-    'bower_components/ratchet/dist/css/ratchet-theme-ios.css'
+    './bower_components/ratchet/dist/css/ratchet.css',
+    './bower_components/ratchet/dist/css/ratchet-theme-ios.css'
   ];
 
   return gulp.src(sources)
     .pipe(plumber(onError))
     .pipe(concat('vendor.css'))
     .pipe(sass())
-    .pipe(gulp.dest('public/build/'));
+    .pipe(gulp.dest('./public/build/'));
 });
 
 gulp.task('sass:app', function() {
   var sources = [
-    'public/styles/partials/*.scss',
-    'public/styles/**/*.scss'
+    './public/styles/partials/*.scss',
+    './public/styles/**/*.scss'
   ];
 
   return gulp.src(sources)
     .pipe(plumber(onError))
     .pipe(concat('main.css'))
     .pipe(sass())
-    .pipe(gulp.dest('public/build/'));
+    .pipe(gulp.dest('./public/build/'));
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['public/styles/**/*.scss'], ['sass:app']);
-  gulp.watch(['public/scripts/**/*.*'], ['browserify:app']);
+  gulp.watch(['./public/styles/**/*.scss'], ['sass:app']);
+  gulp.watch(['./public/scripts/**/*.*'], ['browserify:app']);
 });
 
 gulp.task('develop', function() {
   nodemon({
-    script: 'server.js',
-    ignore: ['public/**/*.*'],
+    script: './server.js',
+    ignore: ['./public/**/*.*'],
     env: {
       'NODE_ENV': 'development'
     }
