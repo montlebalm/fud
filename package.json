@@ -2,9 +2,13 @@
   "name": "fud",
   "version": "0.0.1",
   "description": "Food stuffs",
+  "private": true,
   "dependencies": {
     "express": "^4.4.4",
     "underscore": "^1.6.0"
+  },
+  "scripts": {
+    "compile": "gulp deploy"
   },
   "devDependencies": {
     "debowerify": "^0.8.1",

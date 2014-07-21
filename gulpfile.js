@@ -63,5 +63,7 @@ gulp.task('dev', function() {
   }).on('start', ['fonts', 'sass', 'watch']);
 });
 
+gulp.task('deploy', ['fonts', 'sass', 'browserify']);
+
 gulp.task('default', ['fonts', 'sass', 'browserify']);
 
