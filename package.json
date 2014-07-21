@@ -6,7 +6,12 @@
   "dependencies": {
     "director": "^1.2.3",
     "express": "^4.4.4",
-    "underscore": "^1.6.0",
+    "underscore": "^1.6.0"
+  },
+  "scripts": {
+    "postinstall": "gulp deploy"
+  },
+  "devDependencies": {
     "browserify": "^4.2.3",
     "debowerify": "^0.8.1",
     "gulp": "^3.8.2",
@@ -20,9 +25,9 @@
     "reactify": "~0.8.1",
     "vinyl-source-stream": "^0.1.1"
   },
-  "scripts": {
-    "postinstall": "gulp deploy"
-  },
   "author": "Chris Montrois",
-  "license": "MIT"
+  "license": "MIT",
+  "engine": {
+    "node" : ">=0.10.3 <0.12"
+  }
 }
