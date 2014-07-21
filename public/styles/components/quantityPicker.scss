@@ -1,0 +1,36 @@
+$height: 50px;
+$buttonWidth: 50px;
+
+.comp-quantity-picker {
+  background: white;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+
+  .modifier {
+    height: $height;
+    width: $buttonWidth;
+    text-align: center;
+    background: white;
+    border: 0;
+    color: #007Aff;
+    font-size: 1.5em;
+
+    &.increase {
+      border-left: 1px solid #ccc;
+    }
+
+    &.decrease {
+      border-right: 1px solid #ccc;
+    }
+  }
+
+  .quantity {
+    position: absolute;
+    height: 100%;
+    right: $buttonWidth;
+    left: $buttonWidth;
+    text-align: center;
+    line-height: $height;
+  }
+}

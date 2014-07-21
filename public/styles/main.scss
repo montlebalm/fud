@@ -1,0 +1,16 @@
+a {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+[data-section=list] {
+  .item-quantity {
+    color: $grey-secondary;
+  }
+
+  .completed {
+    color: $grey-secondary;
+    text-decoration: line-through;
+  }
+}
