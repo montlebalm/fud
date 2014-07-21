@@ -74,7 +74,7 @@ module.exports = React.createClass({
     return (
       <div>
         <PageHeader title={this.state.itemCopy.item.name}>
-          <a className='icon icon-left-nav pull-left' onClick={this.routeHandler('/')}></a>
+          <button className='btn btn-link btn-nav pull-left' onClick={this.routeHandler('/')}>Cancel</button>
           <button className='btn btn-link btn-nav pull-right' onClick={this._saveItem}>Save</button>
         </PageHeader>
         <PageContent>

@@ -17,7 +17,7 @@
   "dependencies": {
     "ratchet": "https://github.com/twbs/ratchet.git",
     "jquery": "~2.1.1",
-    "director": "~1.2.2",
-    "react": "~0.10.0"
+    "react": "~0.10.0",
+    "fastclick": "~1.0.2"
   }
 }

@@ -8,6 +8,9 @@ var ListPage = require('./pages/ListPage.jsx');
 var ListItemPage = require('./pages/ListItemPage.jsx');
 
 $(function() {
+  var attachFastClick = require('fastclick');
+  attachFastClick(document.body);
+
   RouterSvc.listen({
     '/': function() {
       React.renderComponent(
