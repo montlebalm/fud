@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var browserify = require('browserify');
+var browserifyShim = require('browserify-shim');
 var debowerify = require('debowerify');
 var reactify = require('reactify');
 var nodemon = require('gulp-nodemon');
@@ -19,6 +20,7 @@ var EXTERNALS = [
   { name: 'director' },
   // Bower
   { name: 'jquery', path: './bower_components/jquery/dist/jquery.js' },
+  { name: 'hammerjs', path: './bower_components/hammerjs/hammer.js' },
   { name: 'fastclick', path: './bower_components/fastclick/lib/fastclick.js' },
   { name: 'ratchet', path: './bower_components/ratchet/dist/js/ratchet.js' },
   { name: 'react', path: './bower_components/react/react-with-addons.js' }
@@ -28,13 +30,16 @@ function onError(error) {
   console.log(error);
 }
 
+console.log(browserifyShim.shim);
+
 gulp.task('browserify:vendor', function() {
   var b = browserify()
-    .transform(debowerify);
+    .transform(debowerify)
+    .transform(browserifyShim);
 
   // Package up all vendor scripts
   EXTERNALS.forEach(function(lib) {
-    b.require(lib.path || lib.name);
+    b.require(lib.path || lib.name, { expose: lib.name });
   });
 
   var stream = b.bundle()

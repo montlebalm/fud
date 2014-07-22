@@ -3,6 +3,16 @@
   "version": "0.0.1",
   "description": "Food stuffs",
   "private": true,
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "swipe": {
+      "exports": "Swipe"
+    }
+  },
   "dependencies": {
     "director": "^1.2.3",
     "express": "^4.4.4",
@@ -10,6 +20,7 @@
   },
   "devDependencies": {
     "browserify": "^4.2.3",
+    "browserify-shim": "^3.6.0",
     "debowerify": "^0.8.1",
     "gulp": "^3.8.2",
     "gulp-browserify": "~0.4.5",

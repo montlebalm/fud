@@ -5,12 +5,43 @@ a {
 }
 
 [data-section=list] {
-  .item-quantity {
-    color: $grey-secondary;
-  }
+  .table-view {
+    .item-overlay {
+      position: relative;
+      width: 100%;
 
-  .completed {
-    color: $grey-secondary;
-    text-decoration: line-through;
+      .table-view-cell {
+        background: white;
+        z-index: 2;
+      }
+
+      .btn {
+        width: 75px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        border-radius: 0;
+        z-index: 1;
+        font-size: 1.5em;
+      }
+
+      .btn.pull-left {
+        left: 0;
+      }
+
+      .btn.pull-right {
+        right: 0;
+      }
+    }
+
+    .item-quantity {
+      color: $grey-secondary;
+      margin-left: 5px;
+    }
+
+    .completed {
+      color: $grey-secondary;
+      text-decoration: line-through;
+    }
   }
 }

@@ -1,6 +1,8 @@
 'use strict';
 
+var $ = require('jquery');
 var React = require('react');
+var Hammer = require('hammerjs');
 var Routable = require('../mixins/Routable.js');
 var GrocerySvc = require('../services/GrocerySvc.js');
 var PageHeader = require('../components/pageHeader.jsx');
@@ -28,14 +30,61 @@ module.exports = React.createClass({
       });
     });
   },
+  componentDidUpdate: function() {
+    this._attachSwipe();
+  },
+  _attachSwipe: function() {
+    var self = this;
+    var options = {
+      direction: Hammer.DIRECTION_HORIZONTAL
+    };
+
+    $(this.refs.list.getDOMNode()).find('.table-view-cell').each(function(i, el) {
+      new Hammer(el, options)
+        .on('pan', self._panItem.bind(self, el))
+        .on('panend', self._panItemReset.bind(self, el));
+    });
+  },
+  _panItem: function(el, e) {
+    if (Math.abs(e.deltaX) < 75) {
+      el.style.left = e.deltaX + 'px';
+    }
+  },
+  _panItemReset: function(el, e) {
+    if (e.deltaX >= 60 || e.deltaX <= -60) {
+      var itemId = $(el).closest('[data-id]').attr('data-id');
+
+      if (e.deltaX >= 60) {
+        this._toggleItem(itemId);
+      } else if (e.deltaX <= -60) {
+        this._removeItem(itemId);
+      }
+    }
+
+    el.style.left = '0px';
+  },
   _updateFilter: function(e) {
     this.setState({
       filter: e.target.value.toLowerCase()
     });
   },
-  _toggleItem: function(item) {
-    item.completed = !item.completed;
-    this.forceUpdate();
+  _toggleItem: function(itemId) {
+    for (var i = 0, len = this.state.list.items.length; i < len; i++) {
+      if (this.state.list.items[i].item.id == itemId) {
+        this.state.list.items[i].completed = !this.state.list.items[i].completed;
+        this.forceUpdate();
+        break;
+      }
+    }
+  },
+  _removeItem: function(itemId) {
+    for (var i = 0, len = this.state.list.items.length; i < len; i++) {
+      if (this.state.list.items[i].item.id == itemId) {
+        this.state.list.items.splice(i, 1);
+        this.forceUpdate();
+        break;
+      }
+    }
   },
   _renderItems: function(items) {
     if (!items || !items.length) {
@@ -46,8 +95,8 @@ module.exports = React.createClass({
 
     return items.map(function(item) {
       var url = '/list/' + self.props.listId + '/item/' + item.item.id;
-      var classes = ['table-view-cell', 'media'];
-      var quantity, note;
+      var classes = ['item-overlay'];
+      var quantity;
 
       if (item.completed) {
         classes.push('completed');
@@ -57,24 +106,21 @@ module.exports = React.createClass({
         quantity = (<span className='item-quantity'>({item.quantity})</span>);
       }
 
-      if (item.note) {
-        note = (<p>{item.note}</p>);
-      }
-
       return (
         <li key={item.item.id} className={classes.join(' ')}>
-          <a href='javascript:;' className='navigate-right'>
-            <input type='checkbox'
-              className='media-object pull-left'
-              onClick={self._toggleItem.bind(self, item)}
-              defaultChecked={item.completed} />
-            <div onClick={self.routeHandler(url)} className='media-body'>
+          <div className='table-view-cell' data-id={item.item.id}>
+            <a className='navigate-right' onClick={self.routeHandler(url)}>
               {item.item.name}
-              {' '}
               {quantity}
-              {note}
-            </div>
-          </a>
+              <p>{item.note}</p>
+            </a>
+          </div>
+          <button className='btn btn-positive pull-left'>
+            <span className='icon icon-check'></span>
+          </button>
+          <button className='btn btn-negative pull-right'>
+            <span className='icon icon-close'></span>
+          </button>
         </li>
       );
     });
@@ -113,7 +159,7 @@ module.exports = React.createClass({
         </div>
         <PageContent section='list'>
           <div id='content-inner'>
-            <ul className='table-view'>
+            <ul className='table-view' ref='list'>
               {this._renderItems(todoItems)}
               {completedHeader}
               {this._renderItems(completedItems)}
