@@ -5,8 +5,8 @@ a:hover {
   position: relative;
   width: 100%; }
   [data-section=list] .table-view .item-overlay .table-view-cell {
-    background: white;
-    z-index: 2; }
+    z-index: 2;
+    background-color: white; }
   [data-section=list] .table-view .item-overlay .btn {
     width: 75px;
     height: 100%;
