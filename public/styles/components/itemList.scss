@@ -1,0 +1,56 @@
+.comp-item-list {
+  .item-overlay {
+    position: relative;
+
+    .table-view-cell {
+      background-color: white;
+      z-index: 2;
+
+      & > a:not(.btn):active {
+        background-color: transparent;
+      }
+    }
+
+    button {
+      border-radius: 0;
+      bottom: 0;
+      margin: 0;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      width: 100px;
+      z-index: 1;
+
+      &.action-complete,
+      &.action-incomplete {
+        left: 0;
+      }
+
+      &.action-remove {
+        right: 0;
+      }
+
+      &.action-incomplete .icon {
+        color: black;
+      }
+
+      .icon {
+        color: white;
+        font-size: 2em;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  .item-quantity {
+    color: $grey-secondary;
+    margin-left: 5px;
+  }
+
+  [data-completed=true] {
+    color: $grey-secondary;
+    text-decoration: line-through;
+  }
+}

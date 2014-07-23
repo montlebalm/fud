@@ -1,36 +1,46 @@
 a:hover {
   text-decoration: none; }
 
-[data-section=list] .table-view .item-overlay {
-  position: relative;
-  width: 100%; }
-  [data-section=list] .table-view .item-overlay .table-view-cell {
-    z-index: 2;
-    background-color: white; }
-  [data-section=list] .table-view .item-overlay .btn {
-    width: 75px;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    border-radius: 0;
-    z-index: 1;
-    font-size: 1.5em; }
-  [data-section=list] .table-view .item-overlay .btn.pull-left {
-    left: 0; }
-  [data-section=list] .table-view .item-overlay .btn.pull-right {
-    right: 0; }
-[data-section=list] .table-view .item-quantity {
-  color: #999;
-  margin-left: 5px; }
-[data-section=list] .table-view .completed {
-  color: #999;
-  text-decoration: line-through; }
-
 .bar .btn-nav.pull-left {
   margin-left: 0; }
 
 .bar .btn-nav.pull-right {
   margin-right: 0; }
+
+.comp-item-list .item-overlay {
+  position: relative; }
+  .comp-item-list .item-overlay .table-view-cell {
+    background-color: white;
+    z-index: 2; }
+    .comp-item-list .item-overlay .table-view-cell > a:not(.btn):active {
+      background-color: transparent; }
+  .comp-item-list .item-overlay button {
+    border-radius: 0;
+    bottom: 0;
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100px;
+    z-index: 1; }
+    .comp-item-list .item-overlay button.action-complete, .comp-item-list .item-overlay button.action-incomplete {
+      left: 0; }
+    .comp-item-list .item-overlay button.action-remove {
+      right: 0; }
+    .comp-item-list .item-overlay button.action-incomplete .icon {
+      color: black; }
+    .comp-item-list .item-overlay button .icon {
+      color: white;
+      font-size: 2em;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%); }
+.comp-item-list .item-quantity {
+  color: #999;
+  margin-left: 5px; }
+.comp-item-list [data-completed=true] {
+  color: #999;
+  text-decoration: line-through; }
 
 .comp-quantity-picker {
   background: white;

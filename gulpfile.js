@@ -30,8 +30,6 @@ function onError(error) {
   console.log(error);
 }
 
-console.log(browserifyShim.shim);
-
 gulp.task('browserify:vendor', function() {
   var b = browserify()
     .transform(debowerify)
@@ -43,7 +41,10 @@ gulp.task('browserify:vendor', function() {
   });
 
   var stream = b.bundle()
-    .pipe(plumber(onError));
+    .on('error', function(error) {
+      console.log(error);
+      this.end();
+    });
 
   if (PROD) {
     stream.pipe(uglify());
@@ -68,7 +69,10 @@ gulp.task('browserify:app', function() {
   });
 
   var stream = b.bundle()
-    .pipe(plumber(onError));
+    .on('error', function(error) {
+      console.log(error);
+      this.end();
+    });
 
   if (PROD) {
     stream.pipe(uglify())
@@ -119,9 +123,10 @@ gulp.task('develop', function() {
   nodemon({
     script: './server.js',
     ignore: [
-      './node_modules/**/*.*',
-      './bower_components/**/*.*',
-      './public/**/*.*'
+      'node_modules/**/*.*',
+      'bower_components/**/*.*',
+      'public/**/*.*',
+      '.git/**/*.*'
     ],
     env: {
       'NODE_ENV': 'development'
