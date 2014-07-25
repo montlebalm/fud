@@ -12,7 +12,13 @@ var COLLAPSE_ANIMATION_SPEED = 50;
 module.exports = React.createClass({
   getDefaultProps: function() {
     return {
-      item: {},
+      item: {
+        completed: false,
+        id: -1,
+        note: '',
+        text: '',
+        quantity: 1
+      },
       onToggle: function() {},
       onRemove: function() {},
       onSelect: function() {}
@@ -20,6 +26,8 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
     this._attachSwipe();
+  },
+  shouldComponentUpdate: function() {
   },
   _attachSwipe: function() {
     var self = this;
@@ -51,9 +59,9 @@ module.exports = React.createClass({
         duration: COLLAPSE_ANIMATION_SPEED,
         done: function() {
           if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
-            self.props.onToggle(self.props.item);
+            self.props.onToggle(self.props.item.id);
           } else {
-            self.props.onRemove(self.props.item);
+            self.props.onRemove(self.props.item.id);
           }
         }
       });
@@ -71,21 +79,16 @@ module.exports = React.createClass({
       return (<span className='item-quantity'>({quantity})</span>);
     }
   },
-  _renderNote: function(note) {
-    if (note) {
-      return (<p>{note}</p>);
-    }
-  },
   _renderToggleButton: function() {
     if (this.props.item.completed) {
       return (
-        <button className='btn btn-block action-incomplete'>
+        <button className='btn btn-neutral action-incomplete'>
           <span className='icon icon-refresh'></span>
         </button>
       );
     } else {
       return (
-        <button className='btn btn-block btn-positive action-complete'>
+        <button className='btn btn-positive action-complete'>
           <span className='icon icon-check'></span>
         </button>
       );
@@ -93,19 +96,19 @@ module.exports = React.createClass({
   },
   _renderRemoveButton: function() {
     return (
-      <button className='btn btn-block btn-negative action-remove'>
+      <button className='btn btn-negative action-remove'>
         <span className='icon icon-close'></span>
       </button>
     );
   },
   render: function() {
     return (
-      <li className='item-overlay' data-id={this.props.item.item.id} data-completed={this.props.item.completed}>
+      <li className='item-overlay' data-id={this.props.item.id} data-completed={this.props.item.completed}>
         <div className='table-view-cell' >
           <a className='navigate-right' onClick={this._selectItem}>
-            {this.props.item.item.name}
+            {this.props.item.text}
             {this._renderQuantity(this.props.item.quantity)}
-            {this._renderNote(this.props.item.note)}
+            <p className='item-note'>{this.props.item.note}</p>
           </a>
         </div>
         {this._renderToggleButton()}

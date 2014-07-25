@@ -1,6 +1,35 @@
+body {
+  font-family: $font-body;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: $font-title;
+}
+
 a {
   &:hover {
     text-decoration: none;
   }
 }
 
+.bar-nav {
+  background-color: $color-primary-dark;
+
+  .title,
+  .icon,
+  .btn {
+    color: white;
+  }
+}
+
+.bar-header-secondary {
+  background-color: $color-primary-med;
+
+  input {
+    color: $color-grey-light;
+  }
+}

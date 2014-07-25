@@ -1,11 +1,63 @@
+body {
+  font-family: 'Helvetica Neue', 'Helvetica'; }
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Helvetica Neue', 'Helvetica'; }
+
 a:hover {
   text-decoration: none; }
+
+.bar-nav {
+  background-color: #303f9f; }
+  .bar-nav .title, .bar-nav .icon, .bar-nav .btn {
+    color: white; }
+
+.bar-header-secondary {
+  background-color: #3f51b5; }
+  .bar-header-secondary input {
+    color: #ccc; }
 
 .bar .btn-nav.pull-left {
   margin-left: 0; }
 
 .bar .btn-nav.pull-right {
   margin-right: 0; }
+
+.btn-positive {
+  background-color: #2baf2b;
+  border-color: #2baf2b; }
+
+.btn-negative {
+  background-color: #e84e40;
+  border-color: #e84e40; }
+
+.btn-neutral {
+  background-color: #ddd;
+  border-color: #ddd; }
+
+.comp-quantity-picker {
+  background: white;
+  position: relative;
+  border-bottom: 1px solid #bdbdbd;
+  border-top: 1px solid #bdbdbd; }
+  .comp-quantity-picker .modifier {
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    color: #3f51b5;
+    font-size: 1.5em;
+    line-height: 50px; }
+    .comp-quantity-picker .modifier.increase {
+      border-left: 1px solid #bdbdbd; }
+    .comp-quantity-picker .modifier.decrease {
+      border-right: 1px solid #bdbdbd; }
+  .comp-quantity-picker .quantity {
+    position: absolute;
+    height: 100%;
+    right: 50px;
+    left: 50px;
+    text-align: center;
+    line-height: 50px; }
 
 .comp-item-list .item-overlay {
   position: relative; }
@@ -14,54 +66,30 @@ a:hover {
     z-index: 2; }
     .comp-item-list .item-overlay .table-view-cell > a:not(.btn):active {
       background-color: transparent; }
+    .comp-item-list .item-overlay .table-view-cell .item-note {
+      min-height: 1em; }
+    .comp-item-list .item-overlay .table-view-cell .item-quantity {
+      color: #bdbdbd;
+      margin-left: 5px; }
   .comp-item-list .item-overlay button {
+    border: none;
     border-radius: 0;
     bottom: 0;
+    color: white;
+    font-size: 1.5em;
     margin: 0;
     position: absolute;
     text-align: center;
     top: 0;
+    user-select: none;
     width: 100px;
     z-index: 1; }
     .comp-item-list .item-overlay button.action-complete, .comp-item-list .item-overlay button.action-incomplete {
       left: 0; }
     .comp-item-list .item-overlay button.action-remove {
       right: 0; }
-    .comp-item-list .item-overlay button.action-incomplete .icon {
-      color: black; }
-    .comp-item-list .item-overlay button .icon {
-      color: white;
-      font-size: 2em;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%); }
-.comp-item-list .item-quantity {
-  color: #999;
-  margin-left: 5px; }
+    .comp-item-list .item-overlay button.action-incomplete {
+      color: #333; }
 .comp-item-list [data-completed=true] {
-  color: #999;
+  color: #bdbdbd;
   text-decoration: line-through; }
-
-.comp-quantity-picker {
-  background: white;
-  position: relative;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc; }
-  .comp-quantity-picker .modifier {
-    height: 50px;
-    width: 50px;
-    text-align: center;
-    color: #007Aff;
-    font-size: 1.5em;
-    line-height: 50px; }
-    .comp-quantity-picker .modifier.increase {
-      border-left: 1px solid #ccc; }
-    .comp-quantity-picker .modifier.decrease {
-      border-right: 1px solid #ccc; }
-  .comp-quantity-picker .quantity {
-    position: absolute;
-    height: 100%;
-    right: 50px;
-    left: 50px;
-    text-align: center;
-    line-height: 50px; }

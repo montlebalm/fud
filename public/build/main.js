@@ -30600,6 +30600,114 @@ module.exports = {
 },{}],7:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
+var React = require("./../../../bower_components/react/react.js");
+
+module.exports = React.createClass({displayName: 'exports',
+  getDefaultProps: function() {
+    return {
+      value: 0,
+      onUpdate: function() {}
+    };
+  },
+  _updateValue: function(modifier) {
+    this.props.onUpdate(this.props.value + modifier);
+  },
+  render: function() {
+    return (
+      React.DOM.div({className: "comp-quantity-picker clearfix"}, 
+        React.DOM.a({className: "modifier decrease pull-left", onClick: this._updateValue.bind(this, -1)}, "–"), 
+        React.DOM.div({className: "quantity"}, 
+          React.DOM.span(null, this.props.value)
+        ), 
+        React.DOM.a({className: "modifier increase pull-right", onClick: this._updateValue.bind(this, 1)}, "+")
+      )
+    );
+  }
+});
+
+
+},{"./../../../bower_components/react/react.js":5}],8:[function(require,module,exports){
+/** @jsx React.DOM */'use strict';
+
+var React = require("./../../../bower_components/react/react.js");
+var TableViewItem = require('../components/TableViewItem.jsx');
+
+module.exports = React.createClass({displayName: 'exports',
+  getDefaultProps: function() {
+    return {
+      items: [],
+      onToggleItem: function() {},
+      onRemoveItems: function() {},
+      onSelectItem: function() {}
+    };
+  },
+  _onToggleItem: function(itemId) {
+    this.props.onToggleItem(itemId);
+    this.forceUpdate();
+  },
+  _clearCompleted: function() {
+    var completedItemIds = this.props.items.filter(function(item) {
+      return item.completed;
+    }).map(function(item) {
+      return item.id;
+    });
+
+    this.props.onRemoveItemIds(completedItems);
+  },
+  _renderSectionTitle: function(title) {
+    return (
+      React.DOM.li({key: title, className: "table-view-cell table-view-divider"}, 
+        title, 
+        React.DOM.button({className: "btn btn-link pull-right", onClick: this._clearCompleted}, "Clear")
+      )
+    );
+  },
+  _renderItems: function(items, title) {
+    if (!items || !items.length) {
+      return;
+    }
+
+    var self = this;
+    var output = [];
+
+    if (title) {
+      output.push(this._renderSectionTitle(title));
+    }
+
+    var renderedItems = items.map(function(item) {
+      return (
+        TableViewItem({key: item.id, 
+          item: item, 
+          onSelect: self.props.onSelectItem, 
+          onToggle: self._onToggleItem, 
+          onRemove: self.props.onRemoveItems})
+      );
+    });
+
+    return output.concat(renderedItems);
+  },
+  render: function() {
+    var todoItems = this.props.items.filter(function(item) {
+      return !item.completed;
+    });
+
+    var completedItems = this.props.items.filter(function(item) {
+      return item.completed;
+    });
+
+    return (
+      React.DOM.ul({className: "comp-item-list table-view"}, 
+        this._renderItems(todoItems), 
+        this._renderItems(completedItems, 'Completed')
+      )
+    );
+  }
+});
+
+
+},{"../components/TableViewItem.jsx":9,"./../../../bower_components/react/react.js":5}],9:[function(require,module,exports){
+/** @jsx React.DOM */'use strict';
+
 var $ = require("./../../../bower_components/jquery/dist/jquery.js");
 var React = require("./../../../bower_components/react/react.js");
 var Hammer = require("./../../../bower_components/hammerjs/hammer.js");
@@ -30612,7 +30720,13 @@ var COLLAPSE_ANIMATION_SPEED = 50;
 module.exports = React.createClass({displayName: 'exports',
   getDefaultProps: function() {
     return {
-      item: {},
+      item: {
+        completed: false,
+        id: -1,
+        note: '',
+        text: '',
+        quantity: 1
+      },
       onToggle: function() {},
       onRemove: function() {},
       onSelect: function() {}
@@ -30620,6 +30734,8 @@ module.exports = React.createClass({displayName: 'exports',
   },
   componentDidMount: function() {
     this._attachSwipe();
+  },
+  shouldComponentUpdate: function() {
   },
   _attachSwipe: function() {
     var self = this;
@@ -30651,9 +30767,9 @@ module.exports = React.createClass({displayName: 'exports',
         duration: COLLAPSE_ANIMATION_SPEED,
         done: function() {
           if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
-            self.props.onToggle(self.props.item);
+            self.props.onToggle(self.props.item.id);
           } else {
-            self.props.onRemove(self.props.item);
+            self.props.onRemove(self.props.item.id);
           }
         }
       });
@@ -30671,21 +30787,16 @@ module.exports = React.createClass({displayName: 'exports',
       return (React.DOM.span({className: "item-quantity"}, "(", quantity, ")"));
     }
   },
-  _renderNote: function(note) {
-    if (note) {
-      return (React.DOM.p(null, note));
-    }
-  },
   _renderToggleButton: function() {
     if (this.props.item.completed) {
       return (
-        React.DOM.button({className: "btn btn-block action-incomplete"}, 
+        React.DOM.button({className: "btn btn-neutral action-incomplete"}, 
           React.DOM.span({className: "icon icon-refresh"})
         )
       );
     } else {
       return (
-        React.DOM.button({className: "btn btn-block btn-positive action-complete"}, 
+        React.DOM.button({className: "btn btn-positive action-complete"}, 
           React.DOM.span({className: "icon icon-check"})
         )
       );
@@ -30693,19 +30804,19 @@ module.exports = React.createClass({displayName: 'exports',
   },
   _renderRemoveButton: function() {
     return (
-      React.DOM.button({className: "btn btn-block btn-negative action-remove"}, 
+      React.DOM.button({className: "btn btn-negative action-remove"}, 
         React.DOM.span({className: "icon icon-close"})
       )
     );
   },
   render: function() {
     return (
-      React.DOM.li({className: "item-overlay", 'data-id': this.props.item.item.id, 'data-completed': this.props.item.completed}, 
+      React.DOM.li({className: "item-overlay", 'data-id': this.props.item.id, 'data-completed': this.props.item.completed}, 
         React.DOM.div({className: "table-view-cell"}, 
           React.DOM.a({className: "navigate-right", onClick: this._selectItem}, 
-            this.props.item.item.name, 
+            this.props.item.text, 
             this._renderQuantity(this.props.item.quantity), 
-            this._renderNote(this.props.item.note)
+            React.DOM.p({className: "item-note"}, this.props.item.note)
           )
         ), 
         this._renderToggleButton(), 
@@ -30716,101 +30827,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"./../../../bower_components/hammerjs/hammer.js":2,"./../../../bower_components/jquery/dist/jquery.js":3,"./../../../bower_components/react/react.js":5}],8:[function(require,module,exports){
-/** @jsx React.DOM */'use strict';
-
-var React = require("./../../../bower_components/react/react.js");
-
-module.exports = React.createClass({displayName: 'exports',
-  getDefaultProps: function() {
-    return {
-      value: 0,
-      onUpdate: function() {}
-    };
-  },
-  _updateValue: function(modifier) {
-    this.props.onUpdate(this.props.value + modifier);
-  },
-  render: function() {
-    return (
-      React.DOM.div({className: "comp-quantity-picker clearfix"}, 
-        React.DOM.a({className: "modifier decrease pull-left", onClick: this._updateValue.bind(this, -1)}, "–"), 
-        React.DOM.div({className: "quantity"}, 
-          React.DOM.span(null, this.props.value)
-        ), 
-        React.DOM.a({className: "modifier increase pull-right", onClick: this._updateValue.bind(this, 1)}, "+")
-      )
-    );
-  }
-});
-
-
-},{"./../../../bower_components/react/react.js":5}],9:[function(require,module,exports){
-/** @jsx React.DOM */'use strict';
-
-var React = require("./../../../bower_components/react/react.js");
-var ItemListItem = require('../components/ItemListItem.jsx');
-
-module.exports = React.createClass({displayName: 'exports',
-  getDefaultProps: function() {
-    return {
-      items: [],
-      onToggleItem: function() {},
-      onRemoveItem: function() {},
-      onSelectItem: function() {}
-    };
-  },
-  _onToggleItem: function(item) {
-    this.props.onToggleItem(item);
-    this.forceUpdate();
-  },
-  _renderSectionTitle: function(title) {
-    return (React.DOM.li({key: title, className: "table-view-cell table-view-divider"}, title));
-  },
-  _renderItems: function(items, title) {
-    if (!items || !items.length) {
-      return;
-    }
-
-    var self = this;
-    var output = [];
-
-    if (title) {
-      output.push(this._renderSectionTitle(title));
-    }
-
-    var renderedItems = items.map(function(item) {
-      return (
-        ItemListItem({key: item.item.id, 
-          item: item, 
-          onSelect: self.props.onSelectItem, 
-          onToggle: self._onToggleItem, 
-          onRemove: self.props.onRemoveItem})
-      );
-    });
-
-    return output.concat(renderedItems);
-  },
-  render: function() {
-    var todoItems = this.props.items.filter(function(item) {
-      return !item.completed;
-    });
-
-    var completedItems = this.props.items.filter(function(item) {
-      return item.completed;
-    });
-
-    return (
-      React.DOM.ul({className: "comp-item-list table-view"}, 
-        this._renderItems(todoItems), 
-        this._renderItems(completedItems, 'Completed')
-      )
-    );
-  }
-});
-
-
-},{"../components/ItemListItem.jsx":7,"./../../../bower_components/react/react.js":5}],10:[function(require,module,exports){
+},{"./../../../bower_components/hammerjs/hammer.js":2,"./../../../bower_components/jquery/dist/jquery.js":3,"./../../../bower_components/react/react.js":5}],10:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
@@ -30865,34 +30882,46 @@ var React = require("./../../bower_components/react/react.js");
 var RouterSvc = require('./services/RouterSvc.js');
 var ListPage = require('./pages/ListPage.jsx');
 var ListItemPage = require('./pages/ListItemPage.jsx');
+var GrocerySvc = require('./services/GrocerySvc.js');
 
 $(function() {
+  // Use FastClick so the app will feel snappier
   var attachFastClick = require("./../../bower_components/fastclick/lib/fastclick.js");
   attachFastClick(document.body);
 
-  RouterSvc.listen({
-    '/': function() {
-      React.renderComponent(
-        new ListPage({
-          listId: 1
-        }),
-        document.body
-      );
-    },
-    '/list/:listid/item/:itemId': function(listId, itemId) {
-      React.renderComponent(
-        new ListItemPage({
+  // Pull a dump of data
+  GrocerySvc.getLists(1, function(err, lists) {
+    // Hook up the routes
+    RouterSvc.listen({
+      '/': function() {
+        var page = new ListPage({
+          list: lists.runningList
+        });
+        React.renderComponent(page, document.body);
+      },
+      '/list/:listid/item/:itemId': function(listId, itemId) {
+        var item;
+
+        for (var i = 0, len = lists.runningList.items.length; i < len; i++) {
+          if (lists.runningList.items[i].item.id == itemId) {
+            item = lists.runningList.items[i];
+            break;
+          }
+        }
+
+        var page = new ListItemPage({
           listId: listId,
-          itemId: itemId
-        }),
-        document.body
-      );
-    }
+          item: item
+        });
+        React.renderComponent(page, document.body);
+      }
+    });
   });
+
 });
 
 
-},{"./../../bower_components/fastclick/lib/fastclick.js":1,"./../../bower_components/jquery/dist/jquery.js":3,"./../../bower_components/ratchet/dist/js/ratchet.js":4,"./../../bower_components/react/react.js":5,"./pages/ListItemPage.jsx":14,"./pages/ListPage.jsx":15,"./services/RouterSvc.js":17}],13:[function(require,module,exports){
+},{"./../../bower_components/fastclick/lib/fastclick.js":1,"./../../bower_components/jquery/dist/jquery.js":3,"./../../bower_components/ratchet/dist/js/ratchet.js":4,"./../../bower_components/react/react.js":5,"./pages/ListItemPage.jsx":14,"./pages/ListPage.jsx":15,"./services/GrocerySvc.js":16,"./services/RouterSvc.js":17}],13:[function(require,module,exports){
 'use strict';
 
 var RouterSvc = require('../services/RouterSvc.js');
@@ -30926,31 +30955,23 @@ module.exports = React.createClass({displayName: 'exports',
   mixins: [Routable],
   getDefaultProps: function() {
     return {
-      itemId: 0,
-      listId: 0
-    };
-  },
-  getInitialState: function() {
-    return {
-      item: {},
-      itemCopy: {
+      item: {
         item: {
           name: ''
         },
         quantity: 0,
         note: ''
       },
+      listId: 0
     };
   },
-  componentDidMount: function() {
-    var self = this;
-
-    GrocerySvc.getListItem(this.props.listId, this.props.itemId, function(err, item) {
-      self.setState({
-        item: item,
-        itemCopy: _.clone(item)
-      });
-    });
+  getInitialState: function() {
+    return {
+      itemCopy: {}
+    };
+  },
+  componentWillMount: function() {
+    this.state.itemCopy = _.clone(this.props.item);
   },
   _saveItem: function() {
     var self = this;
@@ -30978,7 +30999,7 @@ module.exports = React.createClass({displayName: 'exports',
   _removeItem: function() {
     var self = this;
 
-    GrocerySvc.removeItem(this.props.listId, this.state.item.item.id, function(err, res) {
+    GrocerySvc.removeItem(this.props.listId, this.props.item.item.id, function(err, res) {
       if (!err) {
         self.setRoute('/');
       }
@@ -31004,37 +31025,28 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"../components/QuantityPicker.jsx":8,"../components/pageContent.jsx":10,"../components/pageHeader.jsx":11,"../mixins/Routable.js":13,"../services/GrocerySvc.js":16,"./../../../bower_components/react/react.js":5,"underscore":"ZKusGn"}],15:[function(require,module,exports){
+},{"../components/QuantityPicker.jsx":7,"../components/pageContent.jsx":10,"../components/pageHeader.jsx":11,"../mixins/Routable.js":13,"../services/GrocerySvc.js":16,"./../../../bower_components/react/react.js":5,"underscore":"ZKusGn"}],15:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
 var Routable = require('../mixins/Routable.js');
-var GrocerySvc = require('../services/GrocerySvc.js');
 var PageHeader = require('../components/pageHeader.jsx');
 var PageContent = require('../components/pageContent.jsx');
-var ItemList = require('../components/itemList.jsx');
+var TableView = require('../components/TableView.jsx');
 
 module.exports = React.createClass({displayName: 'exports',
   mixins: [Routable],
   getDefaultProps: function() {
     return {
-      listId: 0
+      list: {
+        items: []
+      }
     };
   },
   getInitialState: function() {
     return {
-      filter: '',
-      list: {}
+      filter: ''
     };
-  },
-  componentDidMount: function() {
-    var self = this;
-
-    GrocerySvc.getList(this.props.listId, function(err, list) {
-      self.setState({
-        list: list
-      });
-    });
   },
   _updateFilter: function(e) {
     this.setState({
@@ -31042,35 +31054,52 @@ module.exports = React.createClass({displayName: 'exports',
     });
   },
   _selectItem: function(item) {
-    var url = '/list/' + this.props.listId + '/item/' + item.item.id;
+    var url = '/list/' + this.props.list.id + '/item/' + item.id;
     this.setRoute(url);
   },
-  _toggleItem: function(item) {
-    item.completed = !item.completed;
+  _toggleItem: function(itemId) {
+    this.props.list.items.forEach(function(item) {
+      if (item.item.id == itemId) {
+        item.completed = !item.completed;
+        return false;
+      }
+    });
+
     this.forceUpdate();
   },
-  _removeItem: function(item) {
-    for (var i = 0, len = this.state.list.items.length; i < len; i++) {
-      if (this.state.list.items[i].item.id == item.item.id) {
-        this.state.list.items.splice(i, 1);
-        this.forceUpdate();
-        break;
+  _removeItems: function(items) {
+    items = [].concat(items);
+    var self = this;
+
+    items.forEach(function(item) {
+      for (var i = 0, len = self.props.list.items.length; i < len; i++) {
+        if (self.props.list.items[i].item.id == item.id) {
+          self.props.list.items.splice(i, 1);
+          break;
+        }
       }
-    }
+    });
+
+    this.forceUpdate();
   },
   render: function() {
     var self = this;
-    var filteredItems;
 
-    if (this.state.list.items) {
-      filteredItems = this.state.list.items.filter(function(item) {
-        return item.item.name.toLowerCase().indexOf(self.state.filter) !== -1;
-      });
-    }
+    var filteredItems = this.props.list.items.filter(function(item) {
+      return item.item.name.toLowerCase().indexOf(self.state.filter) !== -1;
+    }).map(function(item) {
+      return {
+        completed: item.completed,
+        id: item.item.id,
+        note: item.note,
+        text: item.item.name,
+        quantity: item.quantity
+      };
+    });
 
     return (
       React.DOM.div(null, 
-        PageHeader({title: this.state.list.name}, 
+        PageHeader({title: this.props.list.name}, 
           React.DOM.a({className: "icon icon-plus pull-right", href: "#modal-edit-item"})
         ), 
         React.DOM.div({className: "bar bar-standard bar-header-secondary"}, 
@@ -31078,9 +31107,9 @@ module.exports = React.createClass({displayName: 'exports',
         ), 
         PageContent({section: "list"}, 
           React.DOM.div({className: "content-inner"}, 
-            ItemList({items: filteredItems, 
+            TableView({items: filteredItems, 
               onToggleItem: this._toggleItem, 
-              onRemoveItem: this._removeItem, 
+              onRemoveItems: this._removeItems, 
               onSelectItem: this._selectItem})
           )
         )
@@ -31090,7 +31119,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"../components/itemList.jsx":9,"../components/pageContent.jsx":10,"../components/pageHeader.jsx":11,"../mixins/Routable.js":13,"../services/GrocerySvc.js":16,"./../../../bower_components/react/react.js":5}],16:[function(require,module,exports){
+},{"../components/TableView.jsx":8,"../components/pageContent.jsx":10,"../components/pageHeader.jsx":11,"../mixins/Routable.js":13,"./../../../bower_components/react/react.js":5}],16:[function(require,module,exports){
 'use strict';
 
 var FIXTURES = require('../FIXTURES.js');
@@ -31118,7 +31147,7 @@ function getItemById(listId, itemId) {
 }
 
 module.exports = {
-  getLists: function(callback) {
+  getLists: function(userId, callback) {
     callback(null, {
       runningList: FIXTURES.runningList,
       lists: FIXTURES.lists

@@ -5,3 +5,19 @@
 .bar .btn-nav.pull-right {
   margin-right: 0;
 }
+
+.btn-positive {
+  background-color: $color-positive;
+  border-color: $color-positive;
+}
+
+.btn-negative {
+  background-color: $color-negative;
+  border-color: $color-negative;
+}
+
+.btn-neutral {
+  background-color: $color-neutral;
+  border-color: $color-neutral;
+}
+

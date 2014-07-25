@@ -25,7 +25,7 @@ function getItemById(listId, itemId) {
 }
 
 module.exports = {
-  getLists: function(callback) {
+  getLists: function(userId, callback) {
     callback(null, {
       runningList: FIXTURES.runningList,
       lists: FIXTURES.lists

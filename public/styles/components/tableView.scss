@@ -9,15 +9,28 @@
       & > a:not(.btn):active {
         background-color: transparent;
       }
+
+      .item-note {
+        min-height: 1em;
+      }
+
+      .item-quantity {
+        color: $color-grey-med;
+        margin-left: 5px;
+      }
     }
 
     button {
+      border: none;
       border-radius: 0;
       bottom: 0;
+      color: white;
+      font-size: 1.5em;
       margin: 0;
       position: absolute;
       text-align: center;
       top: 0;
+      user-select: none;
       width: 100px;
       z-index: 1;
 
@@ -30,27 +43,14 @@
         right: 0;
       }
 
-      &.action-incomplete .icon {
-        color: black;
-      }
-
-      .icon {
-        color: white;
-        font-size: 2em;
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
+      &.action-incomplete {
+        color: $color-grey-dark;
       }
     }
   }
 
-  .item-quantity {
-    color: $grey-secondary;
-    margin-left: 5px;
-  }
-
   [data-completed=true] {
-    color: $grey-secondary;
+    color: $color-grey-med;
     text-decoration: line-through;
   }
 }
