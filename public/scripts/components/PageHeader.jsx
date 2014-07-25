@@ -11,6 +11,9 @@ module.exports = React.createClass({
       title: ''
     };
   },
+  shouldComponentUpdate: function() {
+    return false;
+  },
   render: function() {
     return (
       <header className='bar bar-nav'>

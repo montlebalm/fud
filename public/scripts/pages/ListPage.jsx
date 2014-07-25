@@ -39,13 +39,13 @@ module.exports = React.createClass({
 
     this.forceUpdate();
   },
-  _removeItems: function(items) {
-    items = [].concat(items);
+  _removeItems: function(itemIds) {
+    itemIds = [].concat(itemIds);
     var self = this;
 
-    items.forEach(function(item) {
+    itemIds.forEach(function(id) {
       for (var i = 0, len = self.props.list.items.length; i < len; i++) {
-        if (self.props.list.items[i].item.id == item.id) {
+        if (self.props.list.items[i].item.id == id) {
           self.props.list.items.splice(i, 1);
           break;
         }

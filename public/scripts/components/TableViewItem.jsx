@@ -3,6 +3,7 @@
 var $ = require('jquery');
 var React = require('react');
 var Hammer = require('hammerjs');
+var TweenLite = require('tweenlite');
 
 var SWIPE_DISTANCT_LIMIT = 100;
 var SWIPE_ACTIVATE_DISTANCE = 75;
@@ -28,6 +29,7 @@ module.exports = React.createClass({
     this._attachSwipe();
   },
   shouldComponentUpdate: function() {
+    return false;
   },
   _attachSwipe: function() {
     var self = this;
@@ -55,9 +57,9 @@ module.exports = React.createClass({
       var $overlay = $(el).closest('.item-overlay');
       var itemId = $overlay.attr('data-id');
 
-      $overlay.animate({ height: 0 }, {
-        duration: COLLAPSE_ANIMATION_SPEED,
-        done: function() {
+      TweenLite.to($overlay[0], SWIPE_ANIMATION_SPEED / 1000, {
+        height: 0,
+        onComplete: function() {
           if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
             self.props.onToggle(self.props.item.id);
           } else {
@@ -66,9 +68,7 @@ module.exports = React.createClass({
         }
       });
     } else {
-      $(el).animate({ left: 0 }, {
-        duration: SWIPE_ANIMATION_SPEED
-      });
+      TweenLite.to(el, SWIPE_ANIMATION_SPEED / 1000, { left: 0 });
     }
   },
   _selectItem: function() {

@@ -30423,6 +30423,8 @@ module.exports = warning;
 });
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
+
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var STORES = {
@@ -30597,7 +30599,7 @@ module.exports = {
 };
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
@@ -30626,7 +30628,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"./../../../bower_components/react/react.js":5}],8:[function(require,module,exports){
+},{"./../../../bower_components/react/react.js":5}],9:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
@@ -30705,12 +30707,13 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"../components/TableViewItem.jsx":9,"./../../../bower_components/react/react.js":5}],9:[function(require,module,exports){
+},{"../components/TableViewItem.jsx":10,"./../../../bower_components/react/react.js":5}],10:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var $ = require("./../../../bower_components/jquery/dist/jquery.js");
 var React = require("./../../../bower_components/react/react.js");
 var Hammer = require("./../../../bower_components/hammerjs/hammer.js");
+var TweenLite = require('tweenlite');
 
 var SWIPE_DISTANCT_LIMIT = 100;
 var SWIPE_ACTIVATE_DISTANCE = 75;
@@ -30736,6 +30739,7 @@ module.exports = React.createClass({displayName: 'exports',
     this._attachSwipe();
   },
   shouldComponentUpdate: function() {
+    return false;
   },
   _attachSwipe: function() {
     var self = this;
@@ -30763,9 +30767,9 @@ module.exports = React.createClass({displayName: 'exports',
       var $overlay = $(el).closest('.item-overlay');
       var itemId = $overlay.attr('data-id');
 
-      $overlay.animate({ height: 0 }, {
-        duration: COLLAPSE_ANIMATION_SPEED,
-        done: function() {
+      TweenLite.to($overlay[0], SWIPE_ANIMATION_SPEED / 1000, {
+        height: 0,
+        onComplete: function() {
           if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
             self.props.onToggle(self.props.item.id);
           } else {
@@ -30774,9 +30778,7 @@ module.exports = React.createClass({displayName: 'exports',
         }
       });
     } else {
-      $(el).animate({ left: 0 }, {
-        duration: SWIPE_ANIMATION_SPEED
-      });
+      TweenLite.to(el, SWIPE_ANIMATION_SPEED / 1000, { left: 0 });
     }
   },
   _selectItem: function() {
@@ -30827,7 +30829,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"./../../../bower_components/hammerjs/hammer.js":2,"./../../../bower_components/jquery/dist/jquery.js":3,"./../../../bower_components/react/react.js":5}],10:[function(require,module,exports){
+},{"./../../../bower_components/hammerjs/hammer.js":2,"./../../../bower_components/jquery/dist/jquery.js":3,"./../../../bower_components/react/react.js":5}],11:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
@@ -30837,6 +30839,9 @@ module.exports = React.createClass({displayName: 'exports',
     return {
       section: ''
     };
+  },
+  shouldComponentUpdate: function() {
+    return false;
   },
   render: function() {
     return (
@@ -30848,7 +30853,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"./../../../bower_components/react/react.js":5}],11:[function(require,module,exports){
+},{"./../../../bower_components/react/react.js":5}],12:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
@@ -30862,6 +30867,9 @@ module.exports = React.createClass({displayName: 'exports',
       title: ''
     };
   },
+  shouldComponentUpdate: function() {
+    return false;
+  },
   render: function() {
     return (
       React.DOM.header({className: "bar bar-nav"}, 
@@ -30873,7 +30881,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"./../../../bower_components/react/react.js":5}],12:[function(require,module,exports){
+},{"./../../../bower_components/react/react.js":5}],13:[function(require,module,exports){
 'use strict';
 
 require("./../../bower_components/ratchet/dist/js/ratchet.js");
@@ -30921,7 +30929,7 @@ $(function() {
 });
 
 
-},{"./../../bower_components/fastclick/lib/fastclick.js":1,"./../../bower_components/jquery/dist/jquery.js":3,"./../../bower_components/ratchet/dist/js/ratchet.js":4,"./../../bower_components/react/react.js":5,"./pages/ListItemPage.jsx":14,"./pages/ListPage.jsx":15,"./services/GrocerySvc.js":16,"./services/RouterSvc.js":17}],13:[function(require,module,exports){
+},{"./../../bower_components/fastclick/lib/fastclick.js":1,"./../../bower_components/jquery/dist/jquery.js":3,"./../../bower_components/ratchet/dist/js/ratchet.js":4,"./../../bower_components/react/react.js":5,"./pages/ListItemPage.jsx":15,"./pages/ListPage.jsx":16,"./services/GrocerySvc.js":17,"./services/RouterSvc.js":18}],14:[function(require,module,exports){
 'use strict';
 
 var RouterSvc = require('../services/RouterSvc.js');
@@ -30940,7 +30948,7 @@ module.exports = {
 };
 
 
-},{"../services/RouterSvc.js":17}],14:[function(require,module,exports){
+},{"../services/RouterSvc.js":18}],15:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var _ = require('underscore');
@@ -31025,7 +31033,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"../components/QuantityPicker.jsx":7,"../components/pageContent.jsx":10,"../components/pageHeader.jsx":11,"../mixins/Routable.js":13,"../services/GrocerySvc.js":16,"./../../../bower_components/react/react.js":5,"underscore":"ZKusGn"}],15:[function(require,module,exports){
+},{"../components/QuantityPicker.jsx":8,"../components/pageContent.jsx":11,"../components/pageHeader.jsx":12,"../mixins/Routable.js":14,"../services/GrocerySvc.js":17,"./../../../bower_components/react/react.js":5,"underscore":"ZKusGn"}],16:[function(require,module,exports){
 /** @jsx React.DOM */'use strict';
 
 var React = require("./../../../bower_components/react/react.js");
@@ -31067,13 +31075,13 @@ module.exports = React.createClass({displayName: 'exports',
 
     this.forceUpdate();
   },
-  _removeItems: function(items) {
-    items = [].concat(items);
+  _removeItems: function(itemIds) {
+    itemIds = [].concat(itemIds);
     var self = this;
 
-    items.forEach(function(item) {
+    itemIds.forEach(function(id) {
       for (var i = 0, len = self.props.list.items.length; i < len; i++) {
-        if (self.props.list.items[i].item.id == item.id) {
+        if (self.props.list.items[i].item.id == id) {
           self.props.list.items.splice(i, 1);
           break;
         }
@@ -31119,7 +31127,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"../components/TableView.jsx":8,"../components/pageContent.jsx":10,"../components/pageHeader.jsx":11,"../mixins/Routable.js":13,"./../../../bower_components/react/react.js":5}],16:[function(require,module,exports){
+},{"../components/TableView.jsx":9,"../components/pageContent.jsx":11,"../components/pageHeader.jsx":12,"../mixins/Routable.js":14,"./../../../bower_components/react/react.js":5}],17:[function(require,module,exports){
 'use strict';
 
 var FIXTURES = require('../FIXTURES.js');
@@ -31186,7 +31194,7 @@ module.exports = {
 };
 
 
-},{"../FIXTURES.js":6}],17:[function(require,module,exports){
+},{"../FIXTURES.js":7}],18:[function(require,module,exports){
 'use strict';
 
 var Director = require('director');
@@ -31207,4 +31215,4 @@ module.exports = {
 };
 
 
-},{"director":"FyDMt4"}]},{},[12])
+},{"director":"FyDMt4"}]},{},[13])

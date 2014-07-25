@@ -8,6 +8,9 @@ module.exports = React.createClass({
       section: ''
     };
   },
+  shouldComponentUpdate: function() {
+    return false;
+  },
   render: function() {
     return (
       <div className='content' data-section={this.props.section}>
