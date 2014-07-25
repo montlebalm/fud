@@ -71,14 +71,11 @@
   }
 
   .table-view-divider {
-    position: relative;
+    padding-right: 11px;
 
     a.pull-right {
       margin: 0;
       padding: 0;
-      position: absolute;
-      right: 10px;
-      top: 5px;
     }
   }
 

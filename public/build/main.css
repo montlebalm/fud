@@ -102,13 +102,10 @@ a:hover {
     .comp-item-list .item-overlay button.action-incomplete {
       color: #333; }
 .comp-item-list .table-view-divider {
-  position: relative; }
+  padding-right: 11px; }
   .comp-item-list .table-view-divider a.pull-right {
     margin: 0;
-    padding: 0;
-    position: absolute;
-    right: 10px;
-    top: 5px; }
+    padding: 0; }
 .comp-item-list .item-note {
   min-height: 1em; }
 .comp-item-list .item-quantity {

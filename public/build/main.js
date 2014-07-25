@@ -30655,7 +30655,7 @@ module.exports = React.createClass({displayName: 'exports',
       return item.id;
     });
 
-    this.props.onRemoveItemIds(completedItems);
+    this.props.onRemoveItems(completedItemIds);
   },
   _renderSectionTitle: function(title) {
     return (

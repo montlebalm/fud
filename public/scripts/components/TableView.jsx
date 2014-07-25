@@ -23,7 +23,7 @@ module.exports = React.createClass({
       return item.id;
     });
 
-    this.props.onRemoveItemIds(completedItems);
+    this.props.onRemoveItems(completedItemIds);
   },
   _renderSectionTitle: function(title) {
     return (
