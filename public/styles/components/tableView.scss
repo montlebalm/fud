@@ -2,21 +2,30 @@
   .item-overlay {
     position: relative;
 
+    &.reveal-positive .action-complete,
+    &.reveal-positive .action-incomplete {
+      width: 100%;
+      z-index: 2;
+    }
+    &.reveal-positive .action-remove {
+      display: none;
+    }
+
+    &.reveal-negative .action-remove {
+      width: 100%;
+      z-index: 2;
+    }
+    &.reveal-negative .action-complete,
+    &.reveal-negative .action-incomplete {
+      display: none;
+    }
+
     .table-view-cell {
       background-color: white;
-      z-index: 2;
+      z-index: 3;
 
       & > a:not(.btn):active {
         background-color: transparent;
-      }
-
-      .item-note {
-        min-height: 1em;
-      }
-
-      .item-quantity {
-        color: $color-grey-med;
-        margin-left: 5px;
       }
     }
 
@@ -28,25 +37,58 @@
       font-size: 1.5em;
       margin: 0;
       position: absolute;
-      text-align: center;
       top: 0;
-      user-select: none;
-      width: 100px;
+      width: 50%;
       z-index: 1;
+
+      .icon {
+        width: 20px;
+      }
 
       &.action-complete,
       &.action-incomplete {
         left: 0;
+        text-align: left;
+
+        .icon {
+          margin-left: 30px;
+        }
       }
 
       &.action-remove {
         right: 0;
+        text-align: right;
+
+        .icon {
+          margin-right: 30px;
+        }
       }
 
       &.action-incomplete {
         color: $color-grey-dark;
       }
     }
+  }
+
+  .table-view-divider {
+    position: relative;
+
+    a.pull-right {
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      right: 10px;
+      top: 5px;
+    }
+  }
+
+  .item-note {
+    min-height: 1em;
+  }
+
+  .item-quantity {
+    color: $color-grey-med;
+    margin-left: 5px;
   }
 
   [data-completed=true] {

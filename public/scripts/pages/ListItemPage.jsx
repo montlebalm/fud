@@ -12,6 +12,12 @@ module.exports = React.createClass({
   mixins: [Routable],
   getDefaultProps: function() {
     return {
+      itemId: -1,
+      listId: -1
+    };
+  },
+  getInitialState: function() {
+    return {
       item: {
         item: {
           name: ''
@@ -19,16 +25,18 @@ module.exports = React.createClass({
         quantity: 0,
         note: ''
       },
-      listId: 0
-    };
-  },
-  getInitialState: function() {
-    return {
       itemCopy: {}
     };
   },
   componentWillMount: function() {
-    this.state.itemCopy = _.clone(this.props.item);
+    var self = this;
+
+    GrocerySvc.getListItem(this.props.listId, this.props.itemId, function(err, item) {
+      self.setState({
+        item: item,
+        itemCopy: _.clone(item)
+      });
+    });
   },
   _saveItem: function() {
     var self = this;
@@ -56,7 +64,7 @@ module.exports = React.createClass({
   _removeItem: function() {
     var self = this;
 
-    GrocerySvc.removeItem(this.props.listId, this.props.item.item.id, function(err, res) {
+    GrocerySvc.removeItem(this.props.listId, this.state.item.item.id, function(err, res) {
       if (!err) {
         self.setRoute('/');
       }

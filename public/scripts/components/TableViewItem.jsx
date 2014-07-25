@@ -28,9 +28,6 @@ module.exports = React.createClass({
   componentDidMount: function() {
     this._attachSwipe();
   },
-  shouldComponentUpdate: function() {
-    return false;
-  },
   _attachSwipe: function() {
     var self = this;
     var options = {
@@ -54,25 +51,49 @@ module.exports = React.createClass({
 
     // Check if the user moved the item enough
     if (Math.abs(e.deltaX) >= SWIPE_ACTIVATE_DISTANCE) {
-      var $overlay = $(el).closest('.item-overlay');
-      var itemId = $overlay.attr('data-id');
+      var direction, action;
+      var $container = $(el).closest('li.item-overlay');
 
-      TweenLite.to($overlay[0], SWIPE_ANIMATION_SPEED / 1000, {
-        height: 0,
+      if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
+        direction = 1;
+        action = this.props.onToggle;
+        $container.addClass('reveal-positive');
+      } else {
+        direction = -1;
+        action = this.props.onRemove;
+        $container.addClass('reveal-negative');
+      }
+
+      // Slide the line off the screen
+      TweenLite.to(el, 0.25, {
+        left: (100 * direction) + '%',
         onComplete: function() {
-          if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
-            self.props.onToggle(self.props.item.id);
-          } else {
-            self.props.onRemove(self.props.item.id);
-          }
+          // Now collapse the whole line
+          TweenLite.to(el.parentNode, 0.25, {
+            height: 0,
+            onComplete: function() {
+              action(self.props.item.id);
+            }
+          });
         }
       });
+
+      //TweenLite.to(el.parentNode, .25, {
+        //height: 0,
+        //onComplete: function() {
+          //if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
+            //self.props.onToggle(self.props.item.id);
+          //} else {
+            //self.props.onRemove(self.props.item.id);
+          //}
+        //}
+      //});
     } else {
       TweenLite.to(el, SWIPE_ANIMATION_SPEED / 1000, { left: 0 });
     }
   },
   _selectItem: function() {
-    this.props.onSelect(this.props.item);
+    this.props.onSelect(this.props.item.id);
   },
   _renderQuantity: function(quantity) {
     if (quantity && quantity > 1) {

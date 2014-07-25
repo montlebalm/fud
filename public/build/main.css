@@ -61,16 +61,21 @@ a:hover {
 
 .comp-item-list .item-overlay {
   position: relative; }
+  .comp-item-list .item-overlay.reveal-positive .action-complete, .comp-item-list .item-overlay.reveal-positive .action-incomplete {
+    width: 100%;
+    z-index: 2; }
+  .comp-item-list .item-overlay.reveal-positive .action-remove {
+    display: none; }
+  .comp-item-list .item-overlay.reveal-negative .action-remove {
+    width: 100%;
+    z-index: 2; }
+  .comp-item-list .item-overlay.reveal-negative .action-complete, .comp-item-list .item-overlay.reveal-negative .action-incomplete {
+    display: none; }
   .comp-item-list .item-overlay .table-view-cell {
     background-color: white;
-    z-index: 2; }
+    z-index: 3; }
     .comp-item-list .item-overlay .table-view-cell > a:not(.btn):active {
       background-color: transparent; }
-    .comp-item-list .item-overlay .table-view-cell .item-note {
-      min-height: 1em; }
-    .comp-item-list .item-overlay .table-view-cell .item-quantity {
-      color: #bdbdbd;
-      margin-left: 5px; }
   .comp-item-list .item-overlay button {
     border: none;
     border-radius: 0;
@@ -79,17 +84,36 @@ a:hover {
     font-size: 1.5em;
     margin: 0;
     position: absolute;
-    text-align: center;
     top: 0;
-    user-select: none;
-    width: 100px;
+    width: 50%;
     z-index: 1; }
+    .comp-item-list .item-overlay button .icon {
+      width: 20px; }
     .comp-item-list .item-overlay button.action-complete, .comp-item-list .item-overlay button.action-incomplete {
-      left: 0; }
+      left: 0;
+      text-align: left; }
+      .comp-item-list .item-overlay button.action-complete .icon, .comp-item-list .item-overlay button.action-incomplete .icon {
+        margin-left: 30px; }
     .comp-item-list .item-overlay button.action-remove {
-      right: 0; }
+      right: 0;
+      text-align: right; }
+      .comp-item-list .item-overlay button.action-remove .icon {
+        margin-right: 30px; }
     .comp-item-list .item-overlay button.action-incomplete {
       color: #333; }
+.comp-item-list .table-view-divider {
+  position: relative; }
+  .comp-item-list .table-view-divider a.pull-right {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 10px;
+    top: 5px; }
+.comp-item-list .item-note {
+  min-height: 1em; }
+.comp-item-list .item-quantity {
+  color: #bdbdbd;
+  margin-left: 5px; }
 .comp-item-list [data-completed=true] {
   color: #bdbdbd;
   text-decoration: line-through; }

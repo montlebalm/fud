@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Routable = require('../mixins/Routable.js');
+var GrocerySvc = require('../services/GrocerySvc.js');
 var PageHeader = require('../components/pageHeader.jsx');
 var PageContent = require('../components/pageContent.jsx');
 var TableView = require('../components/TableView.jsx');
@@ -10,27 +11,37 @@ module.exports = React.createClass({
   mixins: [Routable],
   getDefaultProps: function() {
     return {
+      listId: -1
+    };
+  },
+  getInitialState: function() {
+    return {
+      filter: '',
       list: {
         items: []
       }
     };
   },
-  getInitialState: function() {
-    return {
-      filter: ''
-    };
+  componentDidMount: function() {
+    var self = this;
+
+    GrocerySvc.getList(this.props.listId, function(err, list) {
+      self.setState({
+        list: list
+      });
+    });
   },
   _updateFilter: function(e) {
     this.setState({
       filter: e.target.value.toLowerCase()
     });
   },
-  _selectItem: function(item) {
-    var url = '/list/' + this.props.list.id + '/item/' + item.id;
+  _selectItem: function(itemId) {
+    var url = '/list/' + this.state.list.id + '/item/' + itemId;
     this.setRoute(url);
   },
   _toggleItem: function(itemId) {
-    this.props.list.items.forEach(function(item) {
+    this.state.list.items.forEach(function(item) {
       if (item.item.id == itemId) {
         item.completed = !item.completed;
         return false;
@@ -44,9 +55,9 @@ module.exports = React.createClass({
     var self = this;
 
     itemIds.forEach(function(id) {
-      for (var i = 0, len = self.props.list.items.length; i < len; i++) {
-        if (self.props.list.items[i].item.id == id) {
-          self.props.list.items.splice(i, 1);
+      for (var i = 0, len = self.state.list.items.length; i < len; i++) {
+        if (self.state.list.items[i].item.id == id) {
+          self.state.list.items.splice(i, 1);
           break;
         }
       }
@@ -57,7 +68,7 @@ module.exports = React.createClass({
   render: function() {
     var self = this;
 
-    var filteredItems = this.props.list.items.filter(function(item) {
+    var filteredItems = this.state.list.items.filter(function(item) {
       return item.item.name.toLowerCase().indexOf(self.state.filter) !== -1;
     }).map(function(item) {
       return {
@@ -71,7 +82,7 @@ module.exports = React.createClass({
 
     return (
       <div>
-        <PageHeader title={this.props.list.name}>
+        <PageHeader title={this.state.list.name}>
           <a className='icon icon-plus pull-right' href='#modal-edit-item'></a>
         </PageHeader>
         <div className='bar bar-standard bar-header-secondary'>

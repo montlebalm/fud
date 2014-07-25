@@ -29,7 +29,7 @@ module.exports = React.createClass({
     return (
       <li key={title} className='table-view-cell table-view-divider'>
         {title}
-        <button className='btn btn-link pull-right' onClick={this._clearCompleted}>Clear</button>
+        <a className='icon icon-close pull-right' onClick={this._clearCompleted}></a>
       </li>
     );
   },

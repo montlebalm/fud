@@ -30611,6 +30611,9 @@ module.exports = React.createClass({displayName: 'exports',
       onUpdate: function() {}
     };
   },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextProps.value !== this.props.value;
+  },
   _updateValue: function(modifier) {
     this.props.onUpdate(this.props.value + modifier);
   },
@@ -30618,9 +30621,7 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.div({className: "comp-quantity-picker clearfix"}, 
         React.DOM.a({className: "modifier decrease pull-left", onClick: this._updateValue.bind(this, -1)}, "–"), 
-        React.DOM.div({className: "quantity"}, 
-          React.DOM.span(null, this.props.value)
-        ), 
+        React.DOM.div({className: "quantity"}, this.props.value), 
         React.DOM.a({className: "modifier increase pull-right", onClick: this._updateValue.bind(this, 1)}, "+")
       )
     );
@@ -30660,7 +30661,7 @@ module.exports = React.createClass({displayName: 'exports',
     return (
       React.DOM.li({key: title, className: "table-view-cell table-view-divider"}, 
         title, 
-        React.DOM.button({className: "btn btn-link pull-right", onClick: this._clearCompleted}, "Clear")
+        React.DOM.a({className: "icon icon-close pull-right", onClick: this._clearCompleted})
       )
     );
   },
@@ -30738,9 +30739,6 @@ module.exports = React.createClass({displayName: 'exports',
   componentDidMount: function() {
     this._attachSwipe();
   },
-  shouldComponentUpdate: function() {
-    return false;
-  },
   _attachSwipe: function() {
     var self = this;
     var options = {
@@ -30764,25 +30762,49 @@ module.exports = React.createClass({displayName: 'exports',
 
     // Check if the user moved the item enough
     if (Math.abs(e.deltaX) >= SWIPE_ACTIVATE_DISTANCE) {
-      var $overlay = $(el).closest('.item-overlay');
-      var itemId = $overlay.attr('data-id');
+      var direction, action;
+      var $container = $(el).closest('li.item-overlay');
 
-      TweenLite.to($overlay[0], SWIPE_ANIMATION_SPEED / 1000, {
-        height: 0,
+      if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
+        direction = 1;
+        action = this.props.onToggle;
+        $container.addClass('reveal-positive');
+      } else {
+        direction = -1;
+        action = this.props.onRemove;
+        $container.addClass('reveal-negative');
+      }
+
+      // Slide the line off the screen
+      TweenLite.to(el, 0.25, {
+        left: (100 * direction) + '%',
         onComplete: function() {
-          if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
-            self.props.onToggle(self.props.item.id);
-          } else {
-            self.props.onRemove(self.props.item.id);
-          }
+          // Now collapse the whole line
+          TweenLite.to(el.parentNode, 0.25, {
+            height: 0,
+            onComplete: function() {
+              action(self.props.item.id);
+            }
+          });
         }
       });
+
+      //TweenLite.to(el.parentNode, .25, {
+        //height: 0,
+        //onComplete: function() {
+          //if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
+            //self.props.onToggle(self.props.item.id);
+          //} else {
+            //self.props.onRemove(self.props.item.id);
+          //}
+        //}
+      //});
     } else {
       TweenLite.to(el, SWIPE_ANIMATION_SPEED / 1000, { left: 0 });
     }
   },
   _selectItem: function() {
-    this.props.onSelect(this.props.item);
+    this.props.onSelect(this.props.item.id);
   },
   _renderQuantity: function(quantity) {
     if (quantity && quantity > 1) {
@@ -30840,9 +30862,6 @@ module.exports = React.createClass({displayName: 'exports',
       section: ''
     };
   },
-  shouldComponentUpdate: function() {
-    return false;
-  },
   render: function() {
     return (
       React.DOM.div({className: "content", 'data-section': this.props.section}, 
@@ -30866,9 +30885,6 @@ module.exports = React.createClass({displayName: 'exports',
       section: '',
       title: ''
     };
-  },
-  shouldComponentUpdate: function() {
-    return false;
   },
   render: function() {
     return (
@@ -30897,33 +30913,21 @@ $(function() {
   var attachFastClick = require("./../../bower_components/fastclick/lib/fastclick.js");
   attachFastClick(document.body);
 
-  // Pull a dump of data
-  GrocerySvc.getLists(1, function(err, lists) {
-    // Hook up the routes
-    RouterSvc.listen({
-      '/': function() {
-        var page = new ListPage({
-          list: lists.runningList
-        });
-        React.renderComponent(page, document.body);
-      },
-      '/list/:listid/item/:itemId': function(listId, itemId) {
-        var item;
-
-        for (var i = 0, len = lists.runningList.items.length; i < len; i++) {
-          if (lists.runningList.items[i].item.id == itemId) {
-            item = lists.runningList.items[i];
-            break;
-          }
-        }
-
-        var page = new ListItemPage({
-          listId: listId,
-          item: item
-        });
-        React.renderComponent(page, document.body);
-      }
-    });
+  // Hook up the routes
+  RouterSvc.listen({
+    '/': function() {
+      var page = new ListPage({
+        listId: 1
+      });
+      React.renderComponent(page, document.body);
+    },
+    '/list/:listid/item/:itemId': function(listId, itemId) {
+      var page = new ListItemPage({
+        listId: listId,
+        itemId: itemId
+      });
+      React.renderComponent(page, document.body);
+    }
   });
 
 });
@@ -30963,6 +30967,12 @@ module.exports = React.createClass({displayName: 'exports',
   mixins: [Routable],
   getDefaultProps: function() {
     return {
+      itemId: -1,
+      listId: -1
+    };
+  },
+  getInitialState: function() {
+    return {
       item: {
         item: {
           name: ''
@@ -30970,16 +30980,18 @@ module.exports = React.createClass({displayName: 'exports',
         quantity: 0,
         note: ''
       },
-      listId: 0
-    };
-  },
-  getInitialState: function() {
-    return {
       itemCopy: {}
     };
   },
   componentWillMount: function() {
-    this.state.itemCopy = _.clone(this.props.item);
+    var self = this;
+
+    GrocerySvc.getListItem(this.props.listId, this.props.itemId, function(err, item) {
+      self.setState({
+        item: item,
+        itemCopy: _.clone(item)
+      });
+    });
   },
   _saveItem: function() {
     var self = this;
@@ -31007,7 +31019,7 @@ module.exports = React.createClass({displayName: 'exports',
   _removeItem: function() {
     var self = this;
 
-    GrocerySvc.removeItem(this.props.listId, this.props.item.item.id, function(err, res) {
+    GrocerySvc.removeItem(this.props.listId, this.state.item.item.id, function(err, res) {
       if (!err) {
         self.setRoute('/');
       }
@@ -31038,6 +31050,7 @@ module.exports = React.createClass({displayName: 'exports',
 
 var React = require("./../../../bower_components/react/react.js");
 var Routable = require('../mixins/Routable.js');
+var GrocerySvc = require('../services/GrocerySvc.js');
 var PageHeader = require('../components/pageHeader.jsx');
 var PageContent = require('../components/pageContent.jsx');
 var TableView = require('../components/TableView.jsx');
@@ -31046,27 +31059,37 @@ module.exports = React.createClass({displayName: 'exports',
   mixins: [Routable],
   getDefaultProps: function() {
     return {
+      listId: -1
+    };
+  },
+  getInitialState: function() {
+    return {
+      filter: '',
       list: {
         items: []
       }
     };
   },
-  getInitialState: function() {
-    return {
-      filter: ''
-    };
+  componentDidMount: function() {
+    var self = this;
+
+    GrocerySvc.getList(this.props.listId, function(err, list) {
+      self.setState({
+        list: list
+      });
+    });
   },
   _updateFilter: function(e) {
     this.setState({
       filter: e.target.value.toLowerCase()
     });
   },
-  _selectItem: function(item) {
-    var url = '/list/' + this.props.list.id + '/item/' + item.id;
+  _selectItem: function(itemId) {
+    var url = '/list/' + this.state.list.id + '/item/' + itemId;
     this.setRoute(url);
   },
   _toggleItem: function(itemId) {
-    this.props.list.items.forEach(function(item) {
+    this.state.list.items.forEach(function(item) {
       if (item.item.id == itemId) {
         item.completed = !item.completed;
         return false;
@@ -31080,9 +31103,9 @@ module.exports = React.createClass({displayName: 'exports',
     var self = this;
 
     itemIds.forEach(function(id) {
-      for (var i = 0, len = self.props.list.items.length; i < len; i++) {
-        if (self.props.list.items[i].item.id == id) {
-          self.props.list.items.splice(i, 1);
+      for (var i = 0, len = self.state.list.items.length; i < len; i++) {
+        if (self.state.list.items[i].item.id == id) {
+          self.state.list.items.splice(i, 1);
           break;
         }
       }
@@ -31093,7 +31116,7 @@ module.exports = React.createClass({displayName: 'exports',
   render: function() {
     var self = this;
 
-    var filteredItems = this.props.list.items.filter(function(item) {
+    var filteredItems = this.state.list.items.filter(function(item) {
       return item.item.name.toLowerCase().indexOf(self.state.filter) !== -1;
     }).map(function(item) {
       return {
@@ -31107,7 +31130,7 @@ module.exports = React.createClass({displayName: 'exports',
 
     return (
       React.DOM.div(null, 
-        PageHeader({title: this.props.list.name}, 
+        PageHeader({title: this.state.list.name}, 
           React.DOM.a({className: "icon icon-plus pull-right", href: "#modal-edit-item"})
         ), 
         React.DOM.div({className: "bar bar-standard bar-header-secondary"}, 
@@ -31127,7 +31150,7 @@ module.exports = React.createClass({displayName: 'exports',
 });
 
 
-},{"../components/TableView.jsx":9,"../components/pageContent.jsx":11,"../components/pageHeader.jsx":12,"../mixins/Routable.js":14,"./../../../bower_components/react/react.js":5}],17:[function(require,module,exports){
+},{"../components/TableView.jsx":9,"../components/pageContent.jsx":11,"../components/pageHeader.jsx":12,"../mixins/Routable.js":14,"../services/GrocerySvc.js":17,"./../../../bower_components/react/react.js":5}],17:[function(require,module,exports){
 'use strict';
 
 var FIXTURES = require('../FIXTURES.js');
