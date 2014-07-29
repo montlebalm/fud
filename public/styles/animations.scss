@@ -1,0 +1,26 @@
+@-webkit-keyframes slide-left {
+  from {
+    -webkit-transform: translateX(0%);
+  }
+  to {
+    -webkit-transform: translateX(100%);
+  }
+}
+
+.anim-slide-left {
+  -webkit-animation: slide-left 0.5s;
+}
+
+@-webkit-keyframes collapse {
+  from {
+    -webkit-transform: scaleY(100%);
+  }
+  to {
+    -webkit-transform: scaleY(0%);
+  }
+}
+
+.anim-collapse {
+  -webkit-animation: collapse 0.25s;
+}
+

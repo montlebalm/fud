@@ -21,3 +21,23 @@
   border-color: $color-neutral;
 }
 
+.table-view {
+  .table-view-cell {
+    position: relative;
+
+    .icon-check {
+      color: $color-positive;
+
+      &.pull-right {
+        position: absolute;
+        right: 10px;
+      }
+    }
+  }
+
+  .table-view-divider .icon {
+    .icon {
+      color: $color-grey-med;
+    }
+  }
+}

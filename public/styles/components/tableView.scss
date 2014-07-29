@@ -1,6 +1,17 @@
 .comp-item-list {
   .item-overlay {
     position: relative;
+    max-height: 100px;
+
+    &.anim-slide-left-collapse {
+      -webkit-transition: max-height 250ms ease-out 250ms;
+      max-height: 0;
+
+      .table-view-cell {
+        -webkit-transition: transform 250ms ease-out;
+        -webkit-transform: translateX(100%) !important;
+      }
+    }
 
     &.reveal-positive .action-complete,
     &.reveal-positive .action-incomplete {
@@ -51,7 +62,7 @@
         text-align: left;
 
         .icon {
-          margin-left: 30px;
+          margin-left: 25px;
         }
       }
 
@@ -60,7 +71,7 @@
         text-align: right;
 
         .icon {
-          margin-right: 30px;
+          margin-right: 25px;
         }
       }
 
@@ -93,3 +104,24 @@
     text-decoration: line-through;
   }
 }
+
+@-webkit-keyframes slide-left {
+  from {
+    -webkit-transform: translateX(0%);
+  }
+
+  to {
+    -webkit-transform: translateX(100%);
+  }
+}
+
+@-webkit-keyframes collapse {
+  from {
+    max-height: auto;
+  }
+
+  to {
+    max-height: 0;
+  }
+}
+

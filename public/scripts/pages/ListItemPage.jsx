@@ -64,7 +64,7 @@ module.exports = React.createClass({
   _removeItem: function() {
     var self = this;
 
-    GrocerySvc.removeItem(this.props.listId, this.state.item.item.id, function(err, res) {
+    GrocerySvc.removeItem(this.props.listId, this.state.item.id, function(err, res) {
       if (!err) {
         self.setRoute('/');
       }
@@ -73,7 +73,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div>
-        <PageHeader title={this.state.itemCopy.item.name}>
+        <PageHeader title={this.state.item.name}>
           <button className='btn btn-link btn-nav pull-left' onClick={this.routeHandler('/')}>Cancel</button>
           <button className='btn btn-link btn-nav pull-right' onClick={this._saveItem}>Save</button>
         </PageHeader>

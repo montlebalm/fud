@@ -1,3 +1,23 @@
+@-webkit-keyframes slide-left {
+  from {
+    -webkit-transform: translateX(0%); }
+
+  to {
+    -webkit-transform: translateX(100%); } }
+
+.anim-slide-left {
+  -webkit-animation: slide-left 0.5s; }
+
+@-webkit-keyframes collapse {
+  from {
+    -webkit-transform: scaleY(100%); }
+
+  to {
+    -webkit-transform: scaleY(0%); } }
+
+.anim-collapse {
+  -webkit-animation: collapse 0.25s; }
+
 body {
   font-family: 'Helvetica Neue', 'Helvetica'; }
 
@@ -35,6 +55,16 @@ a:hover {
   background-color: #ddd;
   border-color: #ddd; }
 
+.table-view .table-view-cell {
+  position: relative; }
+  .table-view .table-view-cell .icon-check {
+    color: #2baf2b; }
+    .table-view .table-view-cell .icon-check.pull-right {
+      position: absolute;
+      right: 10px; }
+.table-view .table-view-divider .icon .icon {
+  color: #bdbdbd; }
+
 .comp-quantity-picker {
   background: white;
   position: relative;
@@ -60,7 +90,14 @@ a:hover {
     line-height: 50px; }
 
 .comp-item-list .item-overlay {
-  position: relative; }
+  position: relative;
+  max-height: 100px; }
+  .comp-item-list .item-overlay.anim-slide-left-collapse {
+    -webkit-transition: max-height 250ms ease-out 250ms;
+    max-height: 0; }
+    .comp-item-list .item-overlay.anim-slide-left-collapse .table-view-cell {
+      -webkit-transition: transform 250ms ease-out;
+      -webkit-transform: translateX(100%) !important; }
   .comp-item-list .item-overlay.reveal-positive .action-complete, .comp-item-list .item-overlay.reveal-positive .action-incomplete {
     width: 100%;
     z-index: 2; }
@@ -93,12 +130,12 @@ a:hover {
       left: 0;
       text-align: left; }
       .comp-item-list .item-overlay button.action-complete .icon, .comp-item-list .item-overlay button.action-incomplete .icon {
-        margin-left: 30px; }
+        margin-left: 25px; }
     .comp-item-list .item-overlay button.action-remove {
       right: 0;
       text-align: right; }
       .comp-item-list .item-overlay button.action-remove .icon {
-        margin-right: 30px; }
+        margin-right: 25px; }
     .comp-item-list .item-overlay button.action-incomplete {
       color: #333; }
 .comp-item-list .table-view-divider {
@@ -114,3 +151,17 @@ a:hover {
 .comp-item-list [data-completed=true] {
   color: #bdbdbd;
   text-decoration: line-through; }
+
+@-webkit-keyframes slide-left {
+  from {
+    -webkit-transform: translateX(0%); }
+
+  to {
+    -webkit-transform: translateX(100%); } }
+
+@-webkit-keyframes collapse {
+  from {
+    max-height: auto; }
+
+  to {
+    max-height: 0; } }

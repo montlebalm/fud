@@ -1,11 +1,13 @@
 'use strict';
 
+var _ = require('underscore');
 var React = require('react');
 var Routable = require('../mixins/Routable.js');
 var GrocerySvc = require('../services/GrocerySvc.js');
 var PageHeader = require('../components/pageHeader.jsx');
 var PageContent = require('../components/pageContent.jsx');
 var TableView = require('../components/TableView.jsx');
+var AddItemModal = require('../modals/AddItemModal.jsx');
 
 module.exports = React.createClass({
   mixins: [Routable],
@@ -42,7 +44,7 @@ module.exports = React.createClass({
   },
   _toggleItem: function(itemId) {
     this.state.list.items.forEach(function(item) {
-      if (item.item.id == itemId) {
+      if (item.id == itemId) {
         item.completed = !item.completed;
         return false;
       }
@@ -56,7 +58,7 @@ module.exports = React.createClass({
 
     itemIds.forEach(function(id) {
       for (var i = 0, len = self.state.list.items.length; i < len; i++) {
-        if (self.state.list.items[i].item.id == id) {
+        if (self.state.list.items[i].id == id) {
           self.state.list.items.splice(i, 1);
           break;
         }
@@ -65,25 +67,43 @@ module.exports = React.createClass({
 
     this.forceUpdate();
   },
+  _updateItems: function(itemIds) {
+    var currentItemIds = _.pluck(this.state.list.items, 'id');
+
+    // Add the new items we haven't seen
+    var idsToAdd = itemIds.filter(function(id) {
+      return currentItemIds.indexOf(id) === -1;;
+    });
+
+    // Remove the items we no longer have
+    var idsToRemove = currentItemIds.filter(function(id) {
+      return itemIds.indexOf(id) === -1;
+    });
+
+    console.log('Add', idsToAdd);
+    console.log('Remove', idsToRemove);
+  },
   render: function() {
     var self = this;
 
-    var filteredItems = this.state.list.items.filter(function(item) {
-      return item.item.name.toLowerCase().indexOf(self.state.filter) !== -1;
-    }).map(function(item) {
+    var formattedItems = this.state.list.items.map(function(item) {
       return {
         completed: item.completed,
-        id: item.item.id,
+        id: item.id,
         note: item.note,
-        text: item.item.name,
+        text: item.name,
         quantity: item.quantity
       };
+    });
+
+    var filteredItems = formattedItems.filter(function(item) {
+      return item.text.toLowerCase().indexOf(self.state.filter) !== -1;
     });
 
     return (
       <div>
         <PageHeader title={this.state.list.name}>
-          <a className='icon icon-plus pull-right' href='#modal-edit-item'></a>
+          <a className='icon icon-plus pull-right' href='#modal-add-item'></a>
         </PageHeader>
         <div className='bar bar-standard bar-header-secondary'>
           <input type='search' placeholder='Filter items' onChange={this._updateFilter} />
@@ -96,6 +116,7 @@ module.exports = React.createClass({
               onSelectItem={this._selectItem} />
           </div>
         </PageContent>
+        <AddItemModal listId={this.props.listId} updateItems={this._updateItems} />
       </div>
     );
   }

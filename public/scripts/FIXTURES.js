@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('underscore');
+
 var STORES = {
   1: {
     id: 1,
@@ -75,66 +77,64 @@ var RUNNING_LIST = {
   id: 1,
   name: 'Fud',
   items: [{
+    id: 1,
     completed: false,
-    item: INGREDIENTS[1],
     quantity: 2,
     note: 'Vampire repellent'
   }, {
+    id: 2,
     completed: true,
-    item: INGREDIENTS[2],
     quantity: 1,
-    note: 'This time leave your pants ON'
+    note: 'We\'re having Popeye over for dinner'
   }, {
+    id: 3,
     completed: false,
-    item: INGREDIENTS[3],
     note: 'Horses love apples!',
     quantity: 1
   }, {
+    id: 4,
     completed: false,
-    item: INGREDIENTS[4],
     quantity: 1
   }, {
+    id: 5,
     completed: false,
-    item: INGREDIENTS[5],
     quantity: 1
   }, {
+    id: 6,
     completed: false,
-    item: INGREDIENTS[6],
     quantity: 1
   }, {
-    completed: false,
-    item: INGREDIENTS[7],
+    id: 8,
+    completed: true,
     quantity: 1
   }, {
+    id: 10,
     completed: false,
-    item: INGREDIENTS[8],
     quantity: 1
   }, {
-    completed: false,
-    item: INGREDIENTS[9],
-    quantity: 3
+    id: 11,
+    completed: true,
+    quantity: 1,
+    note: 'Rainbows are nature\'s vomit. No wait. That\'s just vomit.'
   }, {
+    id: 12,
     completed: false,
-    item: INGREDIENTS[10],
     quantity: 1
   }, {
+    id: 13,
     completed: false,
-    item: INGREDIENTS[11],
     quantity: 1
   }, {
+    id: 14,
     completed: false,
-    item: INGREDIENTS[12],
-    quantity: 1
-  }, {
-    completed: false,
-    item: INGREDIENTS[13],
-    quantity: 1
-  }, {
-    completed: false,
-    item: INGREDIENTS[14],
     quantity: 1
   }]
 };
+
+// Combine all the ingredients onto the list item
+RUNNING_LIST.items = RUNNING_LIST.items.map(function(item) {
+  return _.extend(item, INGREDIENTS[item.id]);
+});
 
 var LISTS = [{
   id: 3,
@@ -164,7 +164,7 @@ var RECIPES = {
 };
 
 module.exports = {
-  ingredients: INGREDIENTS,
+  items: INGREDIENTS,
   recipes: RECIPES,
   stores: STORES,
   lists: LISTS,

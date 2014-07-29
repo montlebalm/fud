@@ -18,13 +18,20 @@ function getItemById(listId, itemId) {
   var list = getListById(listId);
 
   for (var i = 0, len = list.items.length; i < len; i++) {
-    if (list.items[i].item.id == itemId) {
+    if (list.items[i].id == itemId) {
       return list.items[i];
     }
   }
 }
 
 module.exports = {
+  getItems: function(callback) {
+    var items = Object.keys(FIXTURES.items).map(function(id) {
+      return FIXTURES.items[id];
+    });
+
+    callback(null, items);
+  },
   getLists: function(userId, callback) {
     callback(null, {
       runningList: FIXTURES.runningList,

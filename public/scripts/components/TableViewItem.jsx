@@ -43,7 +43,8 @@ module.exports = React.createClass({
   },
   _panItem: function(el, e) {
     if (Math.abs(e.deltaX) < SWIPE_DISTANCT_LIMIT) {
-      el.style.left = e.deltaX + 'px';
+      //el.style.left = e.deltaX + 'px';
+      el.style.webkitTransform = 'translateX(' + e.deltaX + 'px)';
     }
   },
   _panItemReset: function(el, e) {
@@ -51,45 +52,22 @@ module.exports = React.createClass({
 
     // Check if the user moved the item enough
     if (Math.abs(e.deltaX) >= SWIPE_ACTIVATE_DISTANCE) {
-      var direction, action;
       var $container = $(el).closest('li.item-overlay');
 
       if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
-        direction = 1;
-        action = this.props.onToggle;
-        $container.addClass('reveal-positive');
+        $container.addClass('reveal-positive anim-slide-left-collapse');
+
+        setTimeout(function() {
+          self.props.onToggle(self.props.item.id);
+        }, 500);
       } else {
-        direction = -1;
-        action = this.props.onRemove;
-        $container.addClass('reveal-negative');
+        $container.addClass('reveal-negative anim-slide-right-collapse');
+        $container.on('webkitTransitionEnd', function() {
+          //self.props.onRemove(self.props.item.id);
+        });
       }
-
-      // Slide the line off the screen
-      TweenLite.to(el, 0.25, {
-        left: (100 * direction) + '%',
-        onComplete: function() {
-          // Now collapse the whole line
-          TweenLite.to(el.parentNode, 0.25, {
-            height: 0,
-            onComplete: function() {
-              action(self.props.item.id);
-            }
-          });
-        }
-      });
-
-      //TweenLite.to(el.parentNode, .25, {
-        //height: 0,
-        //onComplete: function() {
-          //if (e.deltaX >= SWIPE_ACTIVATE_DISTANCE) {
-            //self.props.onToggle(self.props.item.id);
-          //} else {
-            //self.props.onRemove(self.props.item.id);
-          //}
-        //}
-      //});
     } else {
-      TweenLite.to(el, SWIPE_ANIMATION_SPEED / 1000, { left: 0 });
+      el.style.webkitTransform = 'translateX(0px)';
     }
   },
   _selectItem: function() {
